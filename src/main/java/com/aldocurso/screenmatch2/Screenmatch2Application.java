@@ -3,6 +3,7 @@ package com.aldocurso.screenmatch2;
 import com.aldocurso.screenmatch2.model.DatosEpisodio;
 import com.aldocurso.screenmatch2.model.DatosSerie;
 import com.aldocurso.screenmatch2.model.DatosTemporada;
+import com.aldocurso.screenmatch2.principal.EjemploStreams;
 import com.aldocurso.screenmatch2.principal.Principal;
 import com.aldocurso.screenmatch2.service.ConsumoAPI;
 import com.aldocurso.screenmatch2.service.ConvertirDatos;
@@ -26,8 +27,11 @@ public class Screenmatch2Application implements CommandLineRunner {
         System.out.println("-----MI PRIMER PROYECTO SRPING SIN WEB-----");
         System.out.println("\n");
 
-        Principal principal = new Principal();
-        principal.mostrarElMenu();
+        var ejemploStreams = new EjemploStreams();
+        ejemploStreams.mostrarEjemplo();
+
+//        Principal principal = new Principal();
+//        principal.mostrarElMenu();
 
 //        var consumoApi = new ConsumoAPI();
 //        var json = consumoApi.obtenerDatos("https://www.omdbapi.com/?t=game+of+thrones&&apikey=eca75ade");

@@ -40,12 +40,13 @@ public class Principal {
         System.out.println("--- TEMPORADAS ---");
         List<DatosTemporada> temporadas = new ArrayList<>();
         for (int i = 1; i <= datosSerie.totalTemporadas(); i++) {
-            json = consumoApi.obtenerDatos(URL_BASE + nombreSerie + i + API_KEY);
+            json = consumoApi.obtenerDatos(URL_BASE + nombreSerie + "&Season=" + i + API_KEY);
             var datosTemporada = conversor.obtenerDatos(json, DatosTemporada.class);
             temporadas.add(datosTemporada);
         }
         System.out.println("Json convetido a un objeto tipo 'Temporada':");
-        temporadas.forEach(System.out::println);
+//        temporadas.forEach(System.out::println);
+        temporadas.forEach(t -> t.episodios().forEach(e -> System.out.println(e.titulo())));
         System.out.println("\n");
 
     }
