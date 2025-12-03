@@ -3,6 +3,7 @@ package com.aldocurso.screenmatch2.principal;
 import com.aldocurso.screenmatch2.model.DatosEpisodio;
 import com.aldocurso.screenmatch2.model.DatosSerie;
 import com.aldocurso.screenmatch2.model.DatosTemporada;
+import com.aldocurso.screenmatch2.model.Episodio;
 import com.aldocurso.screenmatch2.service.ConsumoAPI;
 import com.aldocurso.screenmatch2.service.ConvertirDatos;
 
@@ -66,6 +67,16 @@ public class Principal {
                 .sorted(Comparator.comparing(DatosEpisodio::evaluacion).reversed())
                 .limit(5)
                 .forEach(System.out::println);
+
+        //CREANDO UN LISTA CON OBJETOS DE TIPO EPISODIO, QUE TIENE LA TEMPORADA INCLUIDA
+        List<Episodio> episodios = temporadas.stream()
+                .flatMap(t -> t.episodios().stream()
+                        .map(e -> new Episodio(t.numeroTemporada(), e)))
+                .collect(Collectors.toList());
+
+        //IMPRIME LA LISTA DE EPISODIOS
+        episodios.forEach(System.out::println);
+
 
     }
 }
