@@ -9,6 +9,8 @@ import com.aldocurso.screenmatch2.service.ConvertirDatos;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -41,7 +43,7 @@ public class Principal {
         System.out.println("\n");
 
         //MOSTRAR TODAS LAS TEMPORADAS DE LA SERIE CON SUS DATOS
-        System.out.println("--- TEMPORADAS ---");
+        System.out.println("--- TODOS LOS EPISODIOS SIN INFORMACION ---");
         List<DatosTemporada> temporadas = new ArrayList<>();
         for (int i = 1; i <= datosSerie.totalTemporadas(); i++) {
             json = consumoApi.obtenerDatos(URL_BASE + nombreSerie + "&Season=" + i + API_KEY);
@@ -53,12 +55,13 @@ public class Principal {
         System.out.println("\n");
 
         //CREAMOS UNA LISTA DE TODOS LOS EPISODIOS DE TODAS LAS TEMPORADAS
-        System.out.println("lista de episodios de todas las temporadas");
+        System.out.println("--- CANTIDAD DE EPISODIOS DE LA SERIE---");
         List<DatosEpisodio> datosEpisodios = temporadas.stream()
                 .flatMap(t -> t.episodios().stream())
                 .collect(Collectors.toList());
 
         System.out.println(datosEpisodios.size());
+        System.out.println("\n");
 
         //AHORA UTILIZAMOS ESA LISTA DE EPISODIOS PARA SACAR LOS 5 MEJORES EPISODIOS DE TODA LA SERIE
         System.out.println("--- 5 MEJORES EPISODIOS DE LA SERIE ---");
@@ -67,6 +70,7 @@ public class Principal {
                 .sorted(Comparator.comparing(DatosEpisodio::evaluacion).reversed())
                 .limit(5)
                 .forEach(System.out::println);
+        System.out.println("\n");
 
         //CREANDO UN LISTA CON OBJETOS DE TIPO EPISODIO, QUE TIENE LA TEMPORADA INCLUIDA
         List<Episodio> episodios = temporadas.stream()
@@ -75,8 +79,28 @@ public class Principal {
                 .collect(Collectors.toList());
 
         //IMPRIME LA LISTA DE EPISODIOS
+        System.out.println("--- TODOS LOS EPISODIOS DE LA SERIE CON INFORAMCION ---");
         episodios.forEach(System.out::println);
+        System.out.println("\n");
 
+        //HACER UNA BUSQUEDA DE EPISODIOS POR AÑO
+        System.out.println("--- EPISODIOS APARTIR DE UNA FECHA ESPECIFICADA ---");
+        System.out.println("Indica el año a partir del cual deseas ver los episodios");
+        var fecha = sc.nextInt();
+        sc.nextLine();
+        System.out.println("");
+
+        LocalDate fechaBusqueda = LocalDate.of(fecha, 1, 1);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        episodios.stream()
+                .filter(e -> e.getFechaLanzamiento() != null)
+                .filter(e -> e.getFechaLanzamiento().isAfter(fechaBusqueda))
+                .forEach(e -> System.out.println(
+                        "Temporada: " + e.getTemporada() +
+                                "/ Episodio: " + e.getTitulo() +
+                                "/ Fecha de lanzamiento: " + e.getFechaLanzamiento().format(dtf)
+                ));
 
     }
 }
