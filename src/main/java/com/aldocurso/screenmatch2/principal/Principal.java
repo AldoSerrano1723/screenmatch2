@@ -114,13 +114,27 @@ public class Principal {
 //            System.out.println("No encontramos el episodio");
 //        }
 
-        System.out.println("--- EVALUACION POR TEMPORADAS ---");
-        Map<Integer, Double> evaluacionesPorTemporada = episodios.stream()
-                .filter(e -> e.getEvaluacion() > 0.0)
-                .collect(Collectors.groupingBy(Episodio::getTemporada,
-                        Collectors.averagingDouble(Episodio::getEvaluacion)));
+//        System.out.println("--- EVALUACION POR TEMPORADAS ---");
+//        Map<Integer, Double> evaluacionesPorTemporada = episodios.stream()
+//                .filter(e -> e.getEvaluacion() > 0.0)
+//                .collect(Collectors.groupingBy(Episodio::getTemporada,
+//                        Collectors.averagingDouble(Episodio::getEvaluacion)));
+//
+//        System.out.println(evaluacionesPorTemporada);
+//        System.out.println("\n");
 
-        System.out.println(evaluacionesPorTemporada);
+        System.out.println("--- ESTADÍSTICAS GENERALES DE LA SERIE ---");
+        DoubleSummaryStatistics est = episodios.stream()
+                .filter(e -> e.getEvaluacion() > 0.0)
+                .collect(Collectors.summarizingDouble(Episodio::getEvaluacion));
+
+        // Opción 1: Imprimir todo el objeto (para ver qué trae)
+        System.out.println(est);
+        // Salida: DoubleSummaryStatistics{count=73, sum=635.000000, min=4.000000, average=8.698630, max=9.900000}
+        // Opción 2: Imprimir datos personalizados (Más amigable para el usuario)
+        System.out.println("Media de las evaluaciones: " + est.getAverage());
+        System.out.println("Episodio mejor evaluado: " + est.getMax());
+        System.out.println("Episodio peor evaluado: " + est.getMin());
 
     }
 }
