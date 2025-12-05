@@ -11,10 +11,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Principal {
@@ -50,9 +47,9 @@ public class Principal {
             var datosTemporada = conversor.obtenerDatos(json, DatosTemporada.class);
             temporadas.add(datosTemporada);
         }
-        System.out.println("Json convetido a un objeto tipo 'Temporada':");
-        temporadas.forEach(t -> t.episodios().forEach(e -> System.out.println(e.titulo())));
-        System.out.println("\n");
+//        System.out.println("Json convetido a un objeto tipo 'Temporada':");
+//        temporadas.forEach(t -> t.episodios().forEach(e -> System.out.println(e.titulo())));
+//        System.out.println("\n");
 
         //CREAMOS UNA LISTA DE TODOS LOS EPISODIOS DE TODAS LAS TEMPORADAS
         System.out.println("--- CANTIDAD DE EPISODIOS DE LA SERIE---");
@@ -78,29 +75,44 @@ public class Principal {
                         .map(e -> new Episodio(t.numeroTemporada(), e)))
                 .collect(Collectors.toList());
 
-        //IMPRIME LA LISTA DE EPISODIOS
-        System.out.println("--- TODOS LOS EPISODIOS DE LA SERIE CON INFORAMCION ---");
-        episodios.forEach(System.out::println);
-        System.out.println("\n");
+//        //IMPRIME LA LISTA DE EPISODIOS
+//        System.out.println("--- TODOS LOS EPISODIOS DE LA SERIE CON INFORAMCION ---");
+//        episodios.forEach(System.out::println);
+//        System.out.println("\n");
+//
+//        //HACER UNA BUSQUEDA DE EPISODIOS POR AÑO
+//        System.out.println("--- EPISODIOS APARTIR DE UNA FECHA ESPECIFICADA ---");
+//        System.out.println("Indica el año a partir del cual deseas ver los episodios");
+//        var fecha = sc.nextInt();
+//        sc.nextLine();
+//        System.out.println("");
+//
+//        LocalDate fechaBusqueda = LocalDate.of(fecha, 1, 1);
+//        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+//
+//        episodios.stream()
+//                .filter(e -> e.getFechaLanzamiento() != null)
+//                .filter(e -> e.getFechaLanzamiento().isAfter(fechaBusqueda))
+//                .forEach(e -> System.out.println(
+//                        "Temporada: " + e.getTemporada() +
+//                                "/ Episodio: " + e.getTitulo() +
+//                                "/ Fecha de lanzamiento: " + e.getFechaLanzamiento().format(dtf)
+//                ));
 
-        //HACER UNA BUSQUEDA DE EPISODIOS POR AÑO
-        System.out.println("--- EPISODIOS APARTIR DE UNA FECHA ESPECIFICADA ---");
-        System.out.println("Indica el año a partir del cual deseas ver los episodios");
-        var fecha = sc.nextInt();
-        sc.nextLine();
-        System.out.println("");
+        //BUSCANDO UN EPISODIO POR NOMBRE Y MOSTRANDO EL PRIMERO QUE COINCIDA
+        System.out.println("Escribe el nombre del episodio que quieres ver:");
+        var pedazoTitulo = sc.nextLine();
 
-        LocalDate fechaBusqueda = LocalDate.of(fecha, 1, 1);
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        Optional<Episodio> episodioBuscado = episodios.stream()
+                .filter(e -> e.getTitulo().toUpperCase().contains(pedazoTitulo.toUpperCase()))
+                .findFirst();
 
-        episodios.stream()
-                .filter(e -> e.getFechaLanzamiento() != null)
-                .filter(e -> e.getFechaLanzamiento().isAfter(fechaBusqueda))
-                .forEach(e -> System.out.println(
-                        "Temporada: " + e.getTemporada() +
-                                "/ Episodio: " + e.getTitulo() +
-                                "/ Fecha de lanzamiento: " + e.getFechaLanzamiento().format(dtf)
-                ));
+        if (episodioBuscado.isPresent()){
+            System.out.println("Episodio encontrado");
+            System.out.println("Los datos son: " + episodioBuscado.get());
+        }else {
+            System.out.println("No encontramos el episodio");
+        }
 
     }
 }
